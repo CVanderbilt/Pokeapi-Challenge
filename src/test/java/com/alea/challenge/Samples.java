@@ -20,6 +20,9 @@ public class Samples {
     //List<Pokemon> pokemonList;
     public static final List<Pokemon> LIST_OF_POKEMONS =
         List.of(POKEMON1, POKEMON2, POKEMON3, POKEMON4, POKEMON5, POKEMON6, POKEMON7, POKEMON8, POKEMON9, POKEMON10);
+    public static final List<Pokemon> LIST_OF_HEAVY_POKEMONS = List.of(POKEMON1, POKEMON2, POKEMON3, POKEMON4, POKEMON5);
+    public static final List<Pokemon> LIST_OF_HEIGHT_POKEMONS = List.of(POKEMON6, POKEMON5, POKEMON4, POKEMON3, POKEMON2);
+    public static final List<Pokemon> LIST_OF_EXP_POKEMONS = List.of(POKEMON10, POKEMON9, POKEMON8, POKEMON7, POKEMON6);
     
     public static final String CATEGORY_WEIGHT = "weight";
     public static final String CATEGORY_HEIGHT = "height";
@@ -30,7 +33,7 @@ public class Samples {
     + "%s: %s\n"
     + "%s: %s\n"
     + "%s: %s\n"
-    + "%s: %s\n";
+    + "%s: %s";
 
     public static final String WEIGHT_MESSAGE = String.format(MESSAGE_TEMPLATE, CATEGORY_WEIGHT,
     POKEMON1.getName(), POKEMON1.getWeight(),
@@ -38,6 +41,20 @@ public class Samples {
     POKEMON3.getName(), POKEMON3.getWeight(),
     POKEMON4.getName(), POKEMON4.getWeight(),
     POKEMON5.getName(), POKEMON5.getWeight());
+
+    public static final String HEIGHT_MESSAGE = String.format(MESSAGE_TEMPLATE, CATEGORY_HEIGHT,
+    POKEMON6.getName(), POKEMON6.getHeight(),
+    POKEMON5.getName(), POKEMON5.getHeight(),
+    POKEMON4.getName(), POKEMON4.getHeight(),
+    POKEMON3.getName(), POKEMON3.getHeight(),
+    POKEMON2.getName(), POKEMON2.getHeight());
+
+    public static final String EXP_MESSAGE = String.format(MESSAGE_TEMPLATE, CATEGORY_BASE_EXP,
+    POKEMON10.getName(), POKEMON10.getBase_experience(),
+    POKEMON9.getName(), POKEMON9.getBase_experience(),
+    POKEMON8.getName(), POKEMON8.getBase_experience(),
+    POKEMON7.getName(), POKEMON7.getBase_experience(),
+    POKEMON6.getName(), POKEMON6.getBase_experience());
 /*
 
 The top pokemons with highest value in weight are:

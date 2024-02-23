@@ -38,17 +38,44 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void getHeaviestPokemons_happyPath() {
-        //Cache.Entry <Object, Object> entry = Mockito.mock(Cache.Entry.class);
+    public void getHeaviestPokemons_cached() {
         Cache.ValueWrapper entry = Mockito.mock(Cache.ValueWrapper.class);
         Cache cache = Mockito.mock(Cache.class);
         Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
         Mockito.when(cache.get(anyString())).thenReturn(entry);
-        Mockito.when(entry.get()).thenReturn(Samples.LIST_OF_POKEMONS);
+        Mockito.when(entry.get()).thenReturn(Samples.LIST_OF_HEAVY_POKEMONS);
 
         String result = toTest.getHeaviestPokemons();
 
-        String expectedResult = Samples.WEIGHT_MESSAGE; // Replace with your expected result
+        String expectedResult = Samples.WEIGHT_MESSAGE;
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void getHighestPokemons_cached() {
+        Cache.ValueWrapper entry = Mockito.mock(Cache.ValueWrapper.class);
+        Cache cache = Mockito.mock(Cache.class);
+        Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
+        Mockito.when(cache.get(anyString())).thenReturn(entry);
+        Mockito.when(entry.get()).thenReturn(Samples.LIST_OF_HEIGHT_POKEMONS);
+
+        String result = toTest.getHighestPokemons();
+
+        String expectedResult = Samples.HEIGHT_MESSAGE;
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void getMoreExperiencedPokemons_cached() {
+        Cache.ValueWrapper entry = Mockito.mock(Cache.ValueWrapper.class);
+        Cache cache = Mockito.mock(Cache.class);
+        Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
+        Mockito.when(cache.get(anyString())).thenReturn(entry);
+        Mockito.when(entry.get()).thenReturn(Samples.LIST_OF_EXP_POKEMONS);
+
+        String result = toTest.getMoreExperiencedPokemons();
+
+        String expectedResult = Samples.EXP_MESSAGE;
         assertEquals(expectedResult, result);
     }
 }
