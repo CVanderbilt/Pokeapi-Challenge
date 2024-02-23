@@ -10,6 +10,9 @@ GRADLEW := ./gradlew
 build:
 	$(GRADLEW) build
 
+test:
+	$(GRADLEW) test --info
+
 # Run the java application
 run:
 	java -jar $(JAR_FILE)
@@ -21,6 +24,6 @@ re: clean-all all
 clean:
 	$(GRADLEW) clean
 
-.PHONY: all build start-mongodb stop-mongodb run clean re
+.PHONY: all build start-mongodb stop-mongodb run clean re test
 
 
