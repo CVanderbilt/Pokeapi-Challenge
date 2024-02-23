@@ -13,7 +13,7 @@ public class WebClientConfig {
         return WebClient.builder()
                 .baseUrl("https://pokeapi.co/api/v2/")
                 .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(409600)) // 400 KB
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(819200)) // 800 KB
                         .build())
                 .build();
     }
