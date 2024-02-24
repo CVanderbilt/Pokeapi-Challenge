@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public class Pokemon {
+    @Getter
     String url;
     
     @Getter

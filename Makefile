@@ -11,7 +11,8 @@ build:
 	$(GRADLEW) build
 
 test:
-	$(GRADLEW) test --info
+	$(GRADLEW) test && \
+	$(GRADLEW) jacocoTestReport
 
 # Run the java application
 run:

@@ -2,22 +2,28 @@ package com.alea.challenge.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.reactive.function.client.WebClient;
-import com.alea.challenge.Samples;
+import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
+import org.springframework.web.reactive.function.client.WebClient.RequestHeadersUriSpec;
+import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 
+import com.alea.challenge.Samples;
+import com.alea.challenge.model.Pokemon;
 import com.google.gson.Gson;
+
+import reactor.core.publisher.Mono;
 
 @SpringBootTest
 public class ClientServiceTest {
@@ -77,5 +83,124 @@ public class ClientServiceTest {
 
         String expectedResult = Samples.EXP_MESSAGE;
         assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void getHeaviestPokemons_noCache() {
+        Gson gson = new Gson();
+        Cache cache = Mockito.mock(Cache.class);
+        Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
+        Mockito.when(cache.get(anyString())).thenReturn(null);
+
+        RequestHeadersUriSpec requestHeadersUriSpecMock = Mockito.mock(RequestHeadersUriSpec.class);
+        RequestHeadersSpec requestHeadersSpecMock = Mockito.mock(RequestHeadersSpec.class);
+        ResponseSpec responseSpecMock = Mockito.mock(ResponseSpec.class);
+
+        Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
+        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
+        Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.POKEAPI_POKEMON_LIST_JSON));
+        //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));
+        
+        // Individual pokemon requests mocks
+        int amount = Samples.LIST_OF_POKEMONS.size();
+        List<RequestHeadersSpec> requestHeadersSpecMocks = new ArrayList<>();//(Collections.nCopies(amount, Mockito.mock(RequestHeadersSpec.class)));
+        List<ResponseSpec> responseSpecMocks = new ArrayList<>();//(Collections.nCopies(amount, Mockito.mock(ResponseSpec.class)));
+
+        for (int i = 0; i < amount; i++) {
+            Pokemon pokemon = Samples.LIST_OF_POKEMONS.get(i);
+            RequestHeadersSpec requestHeadersSpecMockPokemon1 = Mockito.mock(RequestHeadersSpec.class);
+            ResponseSpec responseSpecMockPokemon1 = Mockito.mock(ResponseSpec.class);
+            
+            requestHeadersSpecMocks.add(requestHeadersSpecMockPokemon1);
+            responseSpecMocks.add(responseSpecMockPokemon1);
+            
+            Mockito.when(requestHeadersUriSpecMock.uri(pokemon.getUrl())).thenReturn(requestHeadersSpecMocks.get(i));
+            Mockito.when(requestHeadersSpecMocks.get(i).retrieve()).thenReturn(responseSpecMocks.get(i));
+            Mockito.when(responseSpecMocks.get(i).bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(pokemon).getBytes()));
+        }
+        
+        String result = toTest.getHeaviestPokemons();
+
+        assertEquals(Samples.WEIGHT_MESSAGE, result);
+    }
+
+    @Test
+    public void getHighestPokemons_noCache() {
+        Gson gson = new Gson();
+        Cache cache = Mockito.mock(Cache.class);
+        Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
+        Mockito.when(cache.get(anyString())).thenReturn(null);
+
+        RequestHeadersUriSpec requestHeadersUriSpecMock = Mockito.mock(RequestHeadersUriSpec.class);
+        RequestHeadersSpec requestHeadersSpecMock = Mockito.mock(RequestHeadersSpec.class);
+        ResponseSpec responseSpecMock = Mockito.mock(ResponseSpec.class);
+
+        Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
+        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
+        Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.POKEAPI_POKEMON_LIST_JSON));
+        //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));
+        
+        // Individual pokemon requests mocks
+        int amount = Samples.LIST_OF_POKEMONS.size();
+        List<RequestHeadersSpec> requestHeadersSpecMocks = new ArrayList<>();//(Collections.nCopies(amount, Mockito.mock(RequestHeadersSpec.class)));
+        List<ResponseSpec> responseSpecMocks = new ArrayList<>();//(Collections.nCopies(amount, Mockito.mock(ResponseSpec.class)));
+
+        for (int i = 0; i < amount; i++) {
+            Pokemon pokemon = Samples.LIST_OF_POKEMONS.get(i);
+            RequestHeadersSpec requestHeadersSpecMockPokemon1 = Mockito.mock(RequestHeadersSpec.class);
+            ResponseSpec responseSpecMockPokemon1 = Mockito.mock(ResponseSpec.class);
+            
+            requestHeadersSpecMocks.add(requestHeadersSpecMockPokemon1);
+            responseSpecMocks.add(responseSpecMockPokemon1);
+            
+            Mockito.when(requestHeadersUriSpecMock.uri(pokemon.getUrl())).thenReturn(requestHeadersSpecMocks.get(i));
+            Mockito.when(requestHeadersSpecMocks.get(i).retrieve()).thenReturn(responseSpecMocks.get(i));
+            Mockito.when(responseSpecMocks.get(i).bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(pokemon).getBytes()));
+        }
+        
+        String result = toTest.getHighestPokemons();
+
+        assertEquals(Samples.HEIGHT_MESSAGE, result);
+    }
+
+    public void getMoreExperienced_noCache() {
+        Gson gson = new Gson();
+        Cache cache = Mockito.mock(Cache.class);
+        Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
+        Mockito.when(cache.get(anyString())).thenReturn(null);
+
+        RequestHeadersUriSpec requestHeadersUriSpecMock = Mockito.mock(RequestHeadersUriSpec.class);
+        RequestHeadersSpec requestHeadersSpecMock = Mockito.mock(RequestHeadersSpec.class);
+        ResponseSpec responseSpecMock = Mockito.mock(ResponseSpec.class);
+
+        Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
+        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
+        Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.POKEAPI_POKEMON_LIST_JSON));
+        //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));
+        
+        // Individual pokemon requests mocks
+        int amount = Samples.LIST_OF_POKEMONS.size();
+        List<RequestHeadersSpec> requestHeadersSpecMocks = new ArrayList<>();//(Collections.nCopies(amount, Mockito.mock(RequestHeadersSpec.class)));
+        List<ResponseSpec> responseSpecMocks = new ArrayList<>();//(Collections.nCopies(amount, Mockito.mock(ResponseSpec.class)));
+
+        for (int i = 0; i < amount; i++) {
+            Pokemon pokemon = Samples.LIST_OF_POKEMONS.get(i);
+            RequestHeadersSpec requestHeadersSpecMockPokemon1 = Mockito.mock(RequestHeadersSpec.class);
+            ResponseSpec responseSpecMockPokemon1 = Mockito.mock(ResponseSpec.class);
+            
+            requestHeadersSpecMocks.add(requestHeadersSpecMockPokemon1);
+            responseSpecMocks.add(responseSpecMockPokemon1);
+            
+            Mockito.when(requestHeadersUriSpecMock.uri(pokemon.getUrl())).thenReturn(requestHeadersSpecMocks.get(i));
+            Mockito.when(requestHeadersSpecMocks.get(i).retrieve()).thenReturn(responseSpecMocks.get(i));
+            Mockito.when(responseSpecMocks.get(i).bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(pokemon).getBytes()));
+        }
+        
+        String result = toTest.getMoreExperiencedPokemons();
+
+        assertEquals(Samples.EXP_MESSAGE, result);
     }
 }
