@@ -97,7 +97,7 @@ public class ClientServiceTest {
         ResponseSpec responseSpecMock = Mockito.mock(ResponseSpec.class);
 
         Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
+        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=-1")).thenReturn(requestHeadersSpecMock);
         Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.buildPokeApiPokemonListString()));
         //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));
@@ -137,7 +137,7 @@ public class ClientServiceTest {
         ResponseSpec responseSpecMock = Mockito.mock(ResponseSpec.class);
 
         Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
+        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=-1")).thenReturn(requestHeadersSpecMock);
         Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.buildPokeApiPokemonListString()));
         //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));
@@ -177,7 +177,7 @@ public class ClientServiceTest {
         ResponseSpec responseSpecMock = Mockito.mock(ResponseSpec.class);
 
         Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
+        Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=-1")).thenReturn(requestHeadersSpecMock);
         Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.buildPokeApiPokemonListString()));
         //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));

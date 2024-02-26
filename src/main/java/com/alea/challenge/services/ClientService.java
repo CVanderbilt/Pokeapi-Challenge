@@ -178,7 +178,7 @@ public class ClientService {
 
     private List<String> getAllPokemonURLs() {
         String jsonResponse = webClient
-                .get().uri("/pokemon/?limit=20")
+                .get().uri("/pokemon/?limit=-1")
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
