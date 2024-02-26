@@ -1,5 +1,9 @@
 ## ALEA Challenge
 Simple REST api that interacts with [pokeapiV2](https://pokeapi.co/docs/v2), it provides 3 functions to retrieve a list of the 5 pokemons with highest height, weight or base_experience
+This service runs in ```localhost:8080```, the different endpoints that provides are (accepting method GET):
+- ```localhost:8080/client/highest```
+- ```localhost:8080/client/heaviest```
+- ```localhost:8080/client/moreExperienced```
 
 ### How to build and run
 There is a Makefile that will help to build, test and run the project, also the required commands can be run manually. These are the options, they have to be executed in the root of the project:
