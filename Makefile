@@ -19,7 +19,7 @@ run:
 	java -jar $(JAR_FILE)
 
 # Clean and restart
-re: clean-all all
+re: clean all
 
 # Clean the build directory
 clean:
