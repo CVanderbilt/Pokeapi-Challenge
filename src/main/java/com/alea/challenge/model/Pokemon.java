@@ -27,7 +27,18 @@ public class Pokemon {
                              name, base_experience, height, weight);
     }
 
-    public static Comparator<Pokemon> heightComparator = Comparator.comparingInt(Pokemon::getHeight).reversed();
-    public static Comparator<Pokemon> weightComparator = Comparator.comparingInt(Pokemon::getWeight).reversed();
-    public static Comparator<Pokemon> experienceComparator = Comparator.comparingInt(Pokemon::getBase_experience).reversed();
+    public static Comparator<Pokemon> heightComparator = Comparator
+            .comparingInt(Pokemon::getHeight)
+            .thenComparing(Pokemon::getName)
+            .reversed();
+
+    public static Comparator<Pokemon> weightComparator = Comparator
+            .comparingInt(Pokemon::getWeight)
+            .thenComparing(Pokemon::getName)
+            .reversed();
+
+    public static Comparator<Pokemon> experienceComparator = Comparator
+            .comparingInt(Pokemon::getBase_experience)
+            .thenComparing(Pokemon::getName)
+            .reversed();
 }

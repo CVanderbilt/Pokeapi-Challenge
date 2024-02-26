@@ -1,6 +1,8 @@
 package com.alea.challenge;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 import com.alea.challenge.model.Pokemon;
 
@@ -11,10 +13,10 @@ public class Samples {
     public static final String POKEMON_URL4 = "https://pokeapi.co/api/v2/pokemon/4/";
     public static final String POKEMON_URL5 = "https://pokeapi.co/api/v2/pokemon/5/";
     public static final String POKEMON_URL6 = "https://pokeapi.co/api/v2/pokemon/6/";
-    public static final String POKEMON_URL7 = "https://pokeapi.co/api/v2/pokemon/6/";
-    public static final String POKEMON_URL8 = "https://pokeapi.co/api/v2/pokemon/6/";
-    public static final String POKEMON_URL9 = "https://pokeapi.co/api/v2/pokemon/6/";
-    public static final String POKEMON_URL10 = "https://pokeapi.co/api/v2/pokemon/6/";
+    public static final String POKEMON_URL7 = "https://pokeapi.co/api/v2/pokemon/7/";
+    public static final String POKEMON_URL8 = "https://pokeapi.co/api/v2/pokemon/8/";
+    public static final String POKEMON_URL9 = "https://pokeapi.co/api/v2/pokemon/9/";
+    public static final String POKEMON_URL10 = "https://pokeapi.co/api/v2/pokemon/10/";
 
     
     public static final Pokemon POKEMON1 = new Pokemon(POKEMON_URL1, "pokemon1", 1, 5, 10);
@@ -29,10 +31,16 @@ public class Samples {
     public static final Pokemon POKEMON10 = new Pokemon(POKEMON_URL10, "pokemon10", 10, 4, 1);
     //List<Pokemon> pokemonList;
     public static final List<Pokemon> LIST_OF_POKEMONS =
-        List.of(POKEMON1, POKEMON2, POKEMON3, POKEMON4, POKEMON5, POKEMON6, POKEMON7, POKEMON8, POKEMON9);
+        List.of(POKEMON1, POKEMON2, POKEMON3, POKEMON4, POKEMON5, POKEMON6, POKEMON7, POKEMON8, POKEMON9, POKEMON10);
     public static final List<Pokemon> LIST_OF_HEAVY_POKEMONS = List.of(POKEMON1, POKEMON2, POKEMON3, POKEMON4, POKEMON5);
     public static final List<Pokemon> LIST_OF_HEIGHT_POKEMONS = List.of(POKEMON6, POKEMON5, POKEMON4, POKEMON3, POKEMON2);
     public static final List<Pokemon> LIST_OF_EXP_POKEMONS = List.of(POKEMON10, POKEMON9, POKEMON8, POKEMON7, POKEMON6);
+
+    public static TreeSet<Pokemon> buildTreeSet(Comparator<Pokemon> comparator, List<Pokemon> pokemonList) {
+        TreeSet<Pokemon> treeSet = new TreeSet<>(comparator);
+        treeSet.addAll(pokemonList);
+        return treeSet;
+    }
     
     public static final String CATEGORY_WEIGHT = "weight";
     public static final String CATEGORY_HEIGHT = "height";
@@ -66,6 +74,20 @@ public class Samples {
         POKEMON7.getName(), POKEMON7.getBase_experience(),
         POKEMON6.getName(), POKEMON6.getBase_experience());
 
-    public static final String POKEAPI_POKEMON_LIST_JSON = String.format("{\"count\":1302,\"next\":\"https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20\",\"previous\":null,\"results\":[{\"name\":\"bulbasaur\",\"url\":\"%s\"},{\"name\":\"ivysaur\",\"url\":\"%s\"},{\"name\":\"venusaur\",\"url\":\"%s\"},{\"name\":\"charmander\",\"url\":\"%s\"},{\"name\":\"charmeleon\",\"url\":\"%s\"}, {\"name\":\"charmeleon\",\"url\":\"%s\"}]}",
-        POKEMON_URL1, POKEMON_URL2, POKEMON_URL3, POKEMON_URL4, POKEMON_URL5, POKEMON_URL6);
+    //public static final String POKEAPI_POKEMON_LIST_JSON = String.format("{\"count\":1302,\"next\":\"https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20\",\"previous\":null,\"results\":[{\"name\":\"bulbasaur\",\"url\":\"%s\"},{\"name\":\"ivysaur\",\"url\":\"%s\"},{\"name\":\"venusaur\",\"url\":\"%s\"},{\"name\":\"charmander\",\"url\":\"%s\"},{\"name\":\"charmeleon\",\"url\":\"%s\"}, {\"name\":\"charmeleon\",\"url\":\"%s\"}]}",
+
+    public static String buildPokeApiPokemonListString() {
+        String template = "{\"count\":1302,\"next\":\"https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20\",\"previous\":null,\"results\":[%s]}";
+        String listElementTemplate = "{\"name\":\"%s\",\"url\":\"%s\"}";
+        String listStr = "";
+        for (int i = 0; i < LIST_OF_POKEMONS.size(); i++) {
+            Pokemon p = LIST_OF_POKEMONS.get(i);
+            String listElement = String.format(listElementTemplate, p.getName(), p.getUrl());
+            if (i < LIST_OF_POKEMONS.size() - 1) {
+                listElement += ",";
+            }
+            listStr += listElement;
+        }
+        return String.format(template, listStr);
+    }
 }

@@ -3,6 +3,7 @@ package com.alea.challenge.services;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
+import org.springframework.web.reactive.function.client.WebClient.RequestHeadersUriSpec;
+import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 
 import com.alea.challenge.model.Pokemon;
 import com.google.gson.Gson;
@@ -68,7 +72,7 @@ public class ClientService {
         }
     }
 
-    private String BuildResponseString(String category, List<Pokemon> pokemons) {
+    private String BuildResponseString(String category, TreeSet<Pokemon> pokemons) {
         String pokemonDetails = pokemons.stream()
             .map(pokemon -> {
                 String additionalInfo;
@@ -92,22 +96,22 @@ public class ClientService {
         return String.format(MESSAGE_TEMPLATE, category, pokemonDetails);
     }
 
-    private List<Pokemon> getFilteredPokemon(String category) throws Exception {
+    private TreeSet<Pokemon> getFilteredPokemon(String category) throws Exception {
         Cache cache = cacheManager.getCache("filteredPokemon");
         Cache.ValueWrapper valueWrapper = cache.get(category);
 
         if (valueWrapper != null) {
-            return (List<Pokemon>) valueWrapper.get();
+            return (TreeSet<Pokemon>) valueWrapper.get();
         } else {
             List<Pokemon> pokemons = getAllPokemons();
-            List<Pokemon> topWeight = new ArrayList<Pokemon>();
-            List<Pokemon> topHeight = new ArrayList<Pokemon>();
-            List<Pokemon> topExperience = new ArrayList<Pokemon>();
+            TreeSet<Pokemon> topWeight = new TreeSet<>(Pokemon.weightComparator);
+            TreeSet<Pokemon> topHeight = new TreeSet<>(Pokemon.heightComparator);
+            TreeSet<Pokemon> topExperience = new TreeSet<>(Pokemon.experienceComparator);
 
             for (Pokemon pokemon : pokemons) {
-                updateTopList(topHeight, pokemon, Pokemon.heightComparator);
-                updateTopList(topWeight, pokemon, Pokemon.weightComparator);
-                updateTopList(topExperience, pokemon, Pokemon.experienceComparator);
+                updateTopSet(topHeight, pokemon, Pokemon.heightComparator);
+                updateTopSet(topWeight, pokemon, Pokemon.weightComparator);
+                updateTopSet(topExperience, pokemon, Pokemon.experienceComparator);
             }
 
             cache.put(CATEGORY_BASE_EXP, topExperience);
@@ -123,18 +127,14 @@ public class ClientService {
         }
     }
 
-    private void updateTopList(List<Pokemon> topList, Pokemon pokemon, Comparator<Pokemon> comparator) {
-        if (topList.size() < 5) {
-            topList.add(pokemon);
+    private static void updateTopSet(TreeSet<Pokemon> mySet, Pokemon toAdd, Comparator<Pokemon> comparator) {
+        if (mySet.size() < 5) {
+            mySet.add(toAdd);
         } else {
-            System.out.println("Comparing: " + pokemon.buildStatsString() + " with " + topList.get(4).buildStatsString() + " => " + comparator.compare(pokemon, topList.get(4)));
-            if (comparator.compare(pokemon, topList.get(4)) > 0) {
-                int insertIndex = 0;
-                while (insertIndex < 5 && comparator.compare(pokemon, topList.get(insertIndex)) > 0) {
-                    insertIndex++;
-                }
-                topList.add(insertIndex, pokemon);
-                topList.remove(5);
+            Pokemon smallest = mySet.last();
+            if (comparator.compare(toAdd, smallest) < 0) {
+                mySet.pollLast(); // Remove the smallest element
+                mySet.add(toAdd);
             }
         }
     }
@@ -150,6 +150,10 @@ public class ClientService {
             String formattedProgress = String.format("%.2f", progress);
             System.out.print("\rProgress: " + formattedProgress + "%");
             
+            RequestHeadersUriSpec a = webClient.get();
+            RequestHeadersSpec b = a.uri(name);
+            ResponseSpec c = b.retrieve();
+            Mono<byte[]> d = c.bodyToMono(byte[].class);
             Mono<byte[]> responseBody = webClient
                 .get()
                 .uri(name)

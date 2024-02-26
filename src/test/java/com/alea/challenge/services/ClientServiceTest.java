@@ -49,7 +49,7 @@ public class ClientServiceTest {
         Cache cache = Mockito.mock(Cache.class);
         Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
         Mockito.when(cache.get(anyString())).thenReturn(entry);
-        Mockito.when(entry.get()).thenReturn(Samples.LIST_OF_HEAVY_POKEMONS);
+        Mockito.when(entry.get()).thenReturn(Samples.buildTreeSet(Pokemon.weightComparator, Samples.LIST_OF_HEAVY_POKEMONS));
 
         String result = toTest.getHeaviestPokemons();
 
@@ -63,7 +63,7 @@ public class ClientServiceTest {
         Cache cache = Mockito.mock(Cache.class);
         Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
         Mockito.when(cache.get(anyString())).thenReturn(entry);
-        Mockito.when(entry.get()).thenReturn(Samples.LIST_OF_HEIGHT_POKEMONS);
+        Mockito.when(entry.get()).thenReturn(Samples.buildTreeSet(Pokemon.heightComparator, Samples.LIST_OF_HEIGHT_POKEMONS));
 
         String result = toTest.getHighestPokemons();
 
@@ -77,7 +77,7 @@ public class ClientServiceTest {
         Cache cache = Mockito.mock(Cache.class);
         Mockito.when(cacheManager.getCache(anyString())).thenReturn(cache);
         Mockito.when(cache.get(anyString())).thenReturn(entry);
-        Mockito.when(entry.get()).thenReturn(Samples.LIST_OF_EXP_POKEMONS);
+        Mockito.when(entry.get()).thenReturn(Samples.buildTreeSet(Pokemon.experienceComparator, Samples.LIST_OF_EXP_POKEMONS));
 
         String result = toTest.getMoreExperiencedPokemons();
 
@@ -99,7 +99,7 @@ public class ClientServiceTest {
         Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
         Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
         Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.POKEAPI_POKEMON_LIST_JSON));
+        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.buildPokeApiPokemonListString()));
         //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));
         
         // Individual pokemon requests mocks
@@ -139,7 +139,7 @@ public class ClientServiceTest {
         Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
         Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
         Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.POKEAPI_POKEMON_LIST_JSON));
+        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.buildPokeApiPokemonListString()));
         //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));
         
         // Individual pokemon requests mocks
@@ -165,6 +165,7 @@ public class ClientServiceTest {
         assertEquals(Samples.HEIGHT_MESSAGE, result);
     }
 
+    @Test
     public void getMoreExperienced_noCache() {
         Gson gson = new Gson();
         Cache cache = Mockito.mock(Cache.class);
@@ -178,7 +179,7 @@ public class ClientServiceTest {
         Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
         Mockito.when(requestHeadersUriSpecMock.uri("/pokemon/?limit=20")).thenReturn(requestHeadersSpecMock);
         Mockito.when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.POKEAPI_POKEMON_LIST_JSON));
+        Mockito.when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(Samples.buildPokeApiPokemonListString()));
         //Mockito.when(responseSpecMock.bodyToMono(byte[].class)).thenReturn(Mono.just(gson.toJson(Samples.POKEMON10).getBytes()));
         
         // Individual pokemon requests mocks
